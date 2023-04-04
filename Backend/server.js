@@ -12,31 +12,36 @@ const app = express();
 // app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // import routes
+const projectsRoute = require("./routes/projects");
+const tasksRoute = require("./routes/tasks");
+const loginRoute = require("./routes/login");
 
 require("dotenv-flow").config();
 
 // parse request - content type JSON
 app.use(bodyParser.json());
 
-// mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
-// mongoose.connect(
+mongoose
+  .connect(process.env.DBHOST, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  })
+  .catch((error) => console.log("Error conncecting to MongoDB:" + error));
 
-//   process.env.DBHOST, {
-
-//     useUnifiedTopology: true,
-//     useNewUrlParser: true
-//   }
-// ).catch(error => console.log("Error conncecting to MongoDB:" + error));
-
-// mongoose.connection.once("open", () => console.log("Connected succesfully to MongoDB"));
+mongoose.connection.once("open", () =>
+  console.log("Connected succesfully to MongoDB")
+);
 
 //routes
 app.get("/", (req, res) => {
-  res.status(200).send({ message: "Welcome to the Car REST API homepage" });
+  res.status(200).send({ message: "Welcome to the PM REST API Homepage" });
 });
 
 // post, put, delete
+app.use("/api/projects", require("./routes/projects"));
+app.use("/api/tasks", require("./routes/tasks"));
 
 const PORT = process.env.PORT || 4000;
 
