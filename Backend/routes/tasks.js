@@ -1,9 +1,8 @@
 const router = require("express").Router();
-const task = require("../models/task.js");
+const task = require("../models/Task.js");
+const User = require("../models/user");
 
-// CRUD operations
-
-// create a new car
+// create a new Task
 router.post("/", (req, res) => {
   data = req.body;
 
@@ -17,7 +16,7 @@ router.post("/", (req, res) => {
     });
 });
 
-// read all cars
+// read all Tasks
 router.get("/", (req, res) => {
   task
     .find()
@@ -29,7 +28,7 @@ router.get("/", (req, res) => {
     });
 });
 
-// find specific Car by id
+// find specific Task by id
 router.get("/:id", (req, res) => {
   task
     .findById(req.params.id)
@@ -41,28 +40,28 @@ router.get("/:id", (req, res) => {
     });
 });
 
-// update specific cars by id
+// update specific Tasks by id
 router.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  // update specific car
+  // update specific Task
   task
     .findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
-        res.status(404).send({ message: "No car found with that id." });
+        res.status(404).send({ message: "No Task found with that id." });
       } else {
-        res.send({ message: "Car was updated successfully." });
+        res.send({ message: "Task was updated successfully." });
       }
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error updating Car with this id=" + id });
+        .send({ message: "Error updating Task with this id=" + id });
     });
 });
 
-// delete specific car
+// delete specific Task
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
 
@@ -70,15 +69,15 @@ router.delete("/:id", (req, res) => {
     .findByIdAndDelete(id, req.body)
     .then((data) => {
       if (!data) {
-        res.status(404).send({ message: "No car found with that id." });
+        res.status(404).send({ message: "No Task found with that id." });
       } else {
-        res.send({ message: "Car was deleted successfully." });
+        res.send({ message: "Task was deleted successfully." });
       }
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error deleting car with this id=" + id });
+        .send({ message: "Error deleting Task with this id=" + id });
     });
 });
 

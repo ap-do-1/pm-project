@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const app = express();
+// const cors = require("./middleware/cors");
+require("dotenv-flow").config();
 
 //swagger
 // const swaggerUI = require("swagger-ui-express");
@@ -11,12 +13,21 @@ const app = express();
 // const swaggerDocument = yaml.load("./swagger.yaml");
 // app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-// import routes
-const projectsRoute = require("./routes/projects");
-const tasksRoute = require("./routes/tasks");
-const loginRoute = require("./routes/login");
+// middleware
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
 
-require("dotenv-flow").config();
+//cors
 
 // parse request - content type JSON
 app.use(bodyParser.json());
@@ -34,14 +45,22 @@ mongoose.connection.once("open", () =>
   console.log("Connected succesfully to MongoDB")
 );
 
-//routes
+// Root route
 app.get("/", (req, res) => {
   res.status(200).send({ message: "Welcome to the PM REST API Homepage" });
 });
 
-// post, put, delete
+// routes
 app.use("/api/projects", require("./routes/projects"));
 app.use("/api/tasks", require("./routes/tasks"));
+
+// app.use("/api/auth", require("./routes/auth"));
+
+//login
+app.use("/api/login", require("./routes/login"));
+
+//register
+app.use("/api/register", require("./routes/register"));
 
 const PORT = process.env.PORT || 4000;
 

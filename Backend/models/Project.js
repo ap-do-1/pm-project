@@ -1,16 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-//schema for Tasks
-
-let taskSchema = new Schema({
-  project_id: { type: Schema.Types.ObjectId, ref: "Project" },
+//schema for Projects
+let projectSchema = new Schema({
   name: { type: String, required: true, max: 100 },
   description: { type: String, required: true, max: 100 },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
-  due_date: { type: Date, default: Date.now },
-  assigned_to: {
+  tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
+  created_by: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -20,14 +18,11 @@ let taskSchema = new Schema({
     ref: "User",
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["New", "In Progress", "Completed"],
-    default: "New",
+  memebers: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
-  //the priority level of the task (integer)
-  priority: { type: Number, required: true },
 });
 
-// Export the model
-module.exports = mongoose.model("Task", taskSchema);
+module.exports = mongoose.model("Project", projectSchema);
