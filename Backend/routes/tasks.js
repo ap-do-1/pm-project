@@ -1,11 +1,10 @@
 const router = require("express").Router();
 const task = require("../models/Task.js");
-const User = require("../models/user");
+const User = require("../models/User");
 
 // create a new Task
 router.post("/", (req, res) => {
   data = req.body;
-
   task
     .insertMany(data)
     .then((data) => {
@@ -66,7 +65,7 @@ router.delete("/:id", (req, res) => {
   const id = req.params.id;
 
   task
-    .findByIdAndDelete(id, req.body)
+    .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res.status(404).send({ message: "No Task found with that id." });

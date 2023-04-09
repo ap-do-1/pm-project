@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const project = require("../models/Project.js");
+const user = require("../models/User.js");
 
 // create a new Project
 router.post("/", (req, res) => {
@@ -65,7 +66,7 @@ router.delete("/:id", (req, res) => {
   const id = req.params.id;
 
   project
-    .findByIdAndDelete(id, req.body)
+    .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res.status(404).send({ message: "No Project found with that id." });

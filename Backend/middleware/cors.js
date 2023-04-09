@@ -1,21 +1,14 @@
-//cors
-const cors = require("cors");
-
-const whitelist = [
-  "http://localhost:3000",
-  "https://localhost:3443",
-  "http://localhost:3001",
-];
-var corsOptionsDelegate = (req, callback) => {
-  var corsOptions;
-  console.log(req.header("Origin"));
-  if (whitelist.indexOf(req.header("Origin")) !== -1) {
-    corsOptions = { origin: true };
-  } else {
-    corsOptions = { origin: false };
-  }
-  callback(null, corsOptions);
+const cors = (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
 };
 
-exports.cors = cors();
-exports.corsWithOptions = cors(corsOptionsDelegate);
+module.exports = cors;
