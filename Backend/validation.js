@@ -1,4 +1,5 @@
 const Joi = require("joi"); //Joi for validation
+const jwt = require("jsonwebtoken"); //JWT for token
 
 //Register Validation
 const registerValidation = (data) => {
@@ -19,5 +20,23 @@ const loginValidation = (data) => {
   return schema.validate(data);
 };
 
-module.exports.registerValidation = registerValidation;
-module.exports.loginValidation = loginValidation;
+// logic to verify token
+const verifyToken = (req, res, next) => {
+  const token = req.header("auth-token");
+
+  if (!token) return res.status(401).json({ error: "Access denied" });
+
+  try {
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    return res.status(400).json({ error: "Invalid token" });
+  }
+};
+
+module.exports = {
+  registerValidation,
+  loginValidation,
+  verifyToken,
+};

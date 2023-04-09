@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const project = require("../models/Project.js");
-const user = require("../models/User.js");
+const project = require("../models/project");
+const user = require("../models/user");
 
 // create a new Project
 router.post("/", (req, res) => {

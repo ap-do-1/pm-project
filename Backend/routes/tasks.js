@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const task = require("../models/Task.js");
-const User = require("../models/User");
+const task = require("../models/task");
+const User = require("../models/user");
 
 // create a new Task
 router.post("/", (req, res) => {
@@ -77,6 +77,46 @@ router.delete("/:id", (req, res) => {
       res
         .status(500)
         .send({ message: "Error deleting Task with this id=" + id });
+    });
+});
+
+// delete all Tasks
+router.delete("/", (req, res) => {
+  task
+    .deleteMany({})
+    .then((data) => {
+      res.send({ message: "All Tasks were deleted successfully." });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+});
+
+// find all Tasks by user id
+router.get("/user/:id", (req, res) => {
+  const id = req.params.id;
+
+  task
+    .find({ user: id })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+});
+
+// find all Tasks by project id
+router.get("/project/:id", (req, res) => {
+  const id = req.params.id;
+
+  task
+    .find({ project: id })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 });
 

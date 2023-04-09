@@ -7,8 +7,14 @@ const { errorHandler } = require("./middleware/error");
 
 require("dotenv-flow").config();
 
+// Routes task project and auth
+const authRoutes = require("./routes/auth");
+const projectRoutes = require("./routes/projects");
+const taskRoutes = require("./routes/tasks");
+
 // Middleware
 app.use(cors);
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose.set("strictQuery", false);
@@ -30,15 +36,15 @@ mongoose
 
 // Routes
 app.get("/", (req, res) => {
-  res.status(200).send({ message: "Welcome to the PM REST API Homepage" });
+  res.status(200).send({ message: "Welcome to the PM REST API HOMEPAGE" });
 });
 
-app.use("/api/projects", require("./routes/projects"));
-app.use("/api/tasks", require("./routes/tasks"));
-app.use("/api/login", require("./routes/login"));
-app.use("/api/register", require("./routes/register"));
+// Mount your API routes
+app.use("/api/user", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/tasks", taskRoutes);
 
-// Error Handling Middleware
+//Error Handling Middleware
 app.use(errorHandler);
 
 // Start Server
