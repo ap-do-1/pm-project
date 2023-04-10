@@ -12,10 +12,16 @@ export default [
     icon: mdiTable,
   },
   {
+    to: "/tasks",
+    label: "Tasks",
+    icon: mdiTable,
+  },
+  {
     to: "/profile",
     label: "Profile",
     icon: mdiAccountCircle,
   },
+
   {
     to: "/login",
     label: "Login",

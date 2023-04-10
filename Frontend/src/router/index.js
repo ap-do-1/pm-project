@@ -20,6 +20,15 @@ const routes = [
   },
   {
     meta: {
+      title: "Tasks",
+    },
+    path: "/tasks",
+    name: "Tasks",
+    component: () => import("@/views/TaskView.vue"),
+  },
+
+  {
+    meta: {
       title: "Profile",
     },
     path: "/profile",
