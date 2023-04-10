@@ -24,35 +24,21 @@ import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import SectionBannerStarOnGitHub from "@/components/SectionBannerStarOnGitHub.vue";
 
-const chartData = ref(null);
 
-const fillChartData = () => {
-  chartData.value = chartConfig.sampleChartData();
-};
 
-onMounted(() => {
-  fillChartData();
-});
 
 const mainStore = useMainStore();
 
 const clientBarItems = computed(() => mainStore.clients.slice(0, 4));
 
 const transactionBarItems = computed(() => mainStore.history);
+
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-
- 
-      
-
-    
-
-
-    
-
+   
     </SectionMain>
   </LayoutAuthenticated>
 </template>

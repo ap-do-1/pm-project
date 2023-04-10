@@ -12,11 +12,11 @@ const routes = [
   },
   {
     meta: {
-      title: "Tables",
+      title: "Projects",
     },
-    path: "/tables",
-    name: "tables",
-    component: () => import("@/views/TablesView.vue"),
+    path: "/projects",
+    name: "Projects",
+    component: () => import("@/views/ProjectView.vue"),
   },
   {
     meta: {

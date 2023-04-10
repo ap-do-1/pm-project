@@ -7,7 +7,7 @@ export default [
     label: "Dashboard",
   },
   {
-    to: "/tables",
+    to: "/projects",
     label: "Projects",
     icon: mdiTable,
   },

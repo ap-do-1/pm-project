@@ -15,6 +15,7 @@ export const useMainStore = defineStore("main", {
     clients: [],
     history: [],
   }),
+
   actions: {
     setUser(payload) {
       if (payload.name) {
@@ -28,17 +29,15 @@ export const useMainStore = defineStore("main", {
       }
     },
 
-    fetch(sampleDataKey) {
-      axios
-        .get(`data-sources/${sampleDataKey}.json`)
-        .then((r) => {
-          if (r.data && r.data.data) {
-            this[sampleDataKey] = r.data.data;
-          }
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
+    async fetch() {
+      try {
+        const response = await axios.get("/projects");
+        if (response && response.data) {
+          this.clients = response.data;
+        }
+      } catch (error) {
+        alert(error.message);
+      }
     },
   },
 });

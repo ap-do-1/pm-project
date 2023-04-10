@@ -19,9 +19,7 @@ createApp(App).use(router).use(pinia).mount("#app");
 const mainStore = useMainStore(pinia);
 const styleStore = useStyleStore(pinia);
 
-/* Fetch sample data */
-mainStore.fetch("clients");
-mainStore.fetch("history");
+/* Fetch data */
 
 /* App style */
 styleStore.setStyle(localStorage[styleKey] ?? "basic");
