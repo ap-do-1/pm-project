@@ -1,12 +1,15 @@
 import { defineStore } from "pinia";
+import { reactive, toRefs } from "vue";
 import axios from "axios";
 
-export const useMainStore = defineStore("main", {
-  state: () => ({
+export const useMainStore = defineStore("main", () => {
+  const state = reactive({
     /* User */
-    userName: null,
-    userEmail: null,
-    userAvatar: null,
+    user: {
+      name: null,
+      email: null,
+      avatar: null,
+    },
 
     /* Field focus with ctrl+k (to register only once) */
     isFieldFocusRegistered: false,
@@ -14,30 +17,41 @@ export const useMainStore = defineStore("main", {
     /* Sample data (commonly used) */
     clients: [],
     history: [],
-  }),
+  });
 
-  actions: {
-    setUser(payload) {
-      if (payload.name) {
-        this.userName = payload.name;
-      }
-      if (payload.email) {
-        this.userEmail = payload.email;
-      }
-      if (payload.avatar) {
-        this.userAvatar = payload.avatar;
-      }
-    },
+  const setUser = (payload) => {
+    if (payload.name) {
+      state.user.name = payload.name;
+    }
+    if (payload.email) {
+      state.user.email = payload.email;
+    }
+    if (payload.avatar) {
+      state.user.avatar = payload.avatar;
+    }
+  };
 
-    async fetch() {
-      try {
-        const response = await axios.get("/projects");
-        if (response && response.data) {
-          this.clients = response.data;
-        }
-      } catch (error) {
-        alert(error.message);
+  const fetchClients = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/api/user/register"
+      );
+      if (response && response.data) {
+        state.clients = response.data;
       }
-    },
-  },
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getUser = () => {
+    return state.user;
+  };
+
+  return {
+    ...toRefs(state),
+    setUser,
+    fetchClients,
+    getUser,
+  };
 });

@@ -14,7 +14,6 @@ const taskRoutes = require("./routes/tasks");
 
 // Middleware
 app.use(cors);
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose.set("strictQuery", false);
@@ -32,7 +31,7 @@ const dbOptions = {
 mongoose
   .connect(dbUri, dbOptions)
   .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.log("Error connecting to MongoDB:", error));
+  .catch((error) => consoleåp.log("Error connecting to MongoDB:", error));
 
 // Routes
 app.get("/", (req, res) => {

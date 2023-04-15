@@ -23,8 +23,8 @@ import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.
 const mainStore = useMainStore();
 
 const profileForm = reactive({
-  name: mainStore.userName,
-  email: mainStore.userEmail,
+  name: mainStore.user.name,
+  email: mainStore.user.email,
 });
 
 const passwordForm = reactive({
@@ -33,12 +33,19 @@ const passwordForm = reactive({
   password_confirmation: "",
 });
 
+
 const submitProfile = () => {
   mainStore.setUser(profileForm);
+  profileForm.name = mainStore.userName;
+  profileForm.email = mainStore.userEmail;
 };
 
+
 const submitPass = () => {
-  //
+  mainStore.setUser(passwordForm);
+  passwordForm.password_current = "";
+  passwordForm.password = "";
+  passwordForm.password_confirmation = "";
 };
 </script>
 

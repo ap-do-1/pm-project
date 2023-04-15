@@ -1,9 +1,4 @@
-import {
-  mdiAccount,
-  mdiCogOutline,
-  mdiLogout,
-  mdiThemeLightDark,
-} from "@mdi/js";
+import { mdiAccount, mdiLogout, mdiThemeLightDark } from "@mdi/js";
 
 export default [
   {
@@ -13,10 +8,6 @@ export default [
         icon: mdiAccount,
         label: "My Profile",
         to: "/profile",
-      },
-      {
-        icon: mdiCogOutline,
-        label: "Settings",
       },
       {
         isDivider: true,
