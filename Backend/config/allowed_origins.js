@@ -14,6 +14,7 @@ const origins = [
   'pm-project-6un6khcts-apdos-projects-f35d9bca.vercel.app',
   'pm-project-kappa.vercel.app',
   'https://pm-project-kappa.vercel.app',
+  'https://pm-project-bp8b7hynv-apdos-projects-f35d9bca.vercel.app/',
 ];
 
 module.exports = origins;
