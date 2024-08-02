@@ -10,6 +10,10 @@ const origins = [
   'https://pm-api-km33.onrender.com',
   'https://pm-project.onrender.com/',
   'https://pm-project.onrender.com',
+  'https://pm-project-kappa.vercel.app/',
+  'pm-project-6un6khcts-apdos-projects-f35d9bca.vercel.app',
+  'pm-project-kappa.vercel.app',
+  'https://pm-project-kappa.vercel.app',
 ];
 
 module.exports = origins;
