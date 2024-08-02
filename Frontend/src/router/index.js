@@ -1,66 +1,123 @@
-import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "@/views/HomeView.vue";
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import Home from '@/views/HomeView.vue'
 
 const routes = [
   {
-    meta: {
-      title: "dashboard",
-    },
-    path: "/",
-    name: "dashboard",
-    component: Home,
+    path: '/:catchAll(.*)',
+    component: () => import('@/views/404View.vue')
   },
   {
     meta: {
-      title: "Projects",
+      title: 'dashboard',
+      requiresAuth: true
     },
-    path: "/projects",
-    name: "Projects",
-    component: () => import("@/views/ProjectView.vue"),
+    path: '/',
+    name: 'dashboard',
+    component: Home
   },
   {
     meta: {
-      title: "Tasks",
+      title: 'Projects',
+      requiresAuth: true
     },
-    path: "/tasks",
-    name: "Tasks",
-    component: () => import("@/views/TaskView.vue"),
+    path: '/projects',
+    name: 'Projects',
+    component: () => import('@/views/ProjectView.vue')
   },
 
   {
     meta: {
-      title: "Profile",
+      title: 'KanbanBoard',
+      requiresAuth: true
     },
-    path: "/profile",
-    name: "profile",
-    component: () => import("@/views/ProfileView.vue"),
+    path: '/KanbanBoard/:id',
+    name: 'KanbanBoard',
+    component: () => import('@/views/KanbanBoardView.vue')
   },
 
   {
     meta: {
-      title: "Login",
+      title: 'Create Project',
+      requiresAuth: true
     },
-    path: "/login",
-    name: "login",
-    component: () => import("@/views/LoginView.vue"),
+    path: '/CreateProject',
+    name: 'CreateProject',
+    component: () => import('@/views/CreateProject.vue')
+  },
+  {
+    meta: {
+      title: 'Edit Project',
+      requiresAuth: true
+    },
+    path: '/EditProject/:id',
+    name: 'EditProject',
+    component: () => import('@/views/EditProjectView.vue')
+  },
+  {
+    meta: {
+      title: 'Profile',
+      requiresAuth: true
+    },
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/ProfileView.vue')
   },
 
   {
     meta: {
-      title: "Register",
+      title: 'Login',
+      requiresGuest: true
     },
-    path: "/register",
-    name: "register",
-    component: () => import("@/views/RegisterView.vue"),
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/LoginView.vue')
   },
-];
+
+  {
+    meta: {
+      title: 'Register',
+      requiresGuest: true
+    },
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/RegisterView.vue')
+  },
+
+  {
+    path: '/logout',
+    name: 'logout',
+    meta: { requiresAuth: true }
+    // Component or redirect to perform the logout action
+  }
+]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    return savedPosition || { top: 0 };
-  },
-});
+    return savedPosition || { top: 0 }
+  }
+})
 
-export default router;
+//navigation guard
+router.beforeEach(async (to, from, next) => {
+  const store = useAuthStore()
+
+  if (to.meta.requiresAuth && !store.isAuthenticated) {
+    next({ name: 'login', query: { redirect: to.fullPath } })
+  } else if (to.meta.requiresGuest && store.isAuthenticated) {
+    next({ name: 'dashboard' })
+  } else if (to.name === 'logout') {
+    await store.logout()
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+})
+
+router.afterEach((to, from) => {
+  document.title = `${to.meta.title} | Vue Task Manager`
+})
+
+export default router

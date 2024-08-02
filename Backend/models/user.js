@@ -1,25 +1,61 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Define the role schema for embedding
-const roleSchema = new Schema({
-  role: { type: String, required: true },
-  permissions: [{ type: String, required: true }],
-});
+const UserSchema = Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      unique: true,
+      validate: [
+        (val) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val),
+      ],
+    },
+    first_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      min: 6,
+    },
+    last_login: {
+      type: Date,
+      default: Date.now,
+    },
+    avatar: {
+      type: String,
+      default:
+        "https://play-lh.googleusercontent.com/XVHP0sBKrRJYZq_dB1RalwSmx5TcYYRRfYMFO18jgNAnxHAIA1osxM55XHYTb3LpkV8",
+    },
+    refresh_token: String,
+  },
+  {
+    virtuals: {
+      full_name: {
+        get() {
+          return this.first_name + " " + this.last_name;
+        },
+      },
+      id: {
+        get() {
+          return this._id;
+        },
+      },
+    },
+    timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+  }
+);
 
-// Define the user schema
-const userSchema = new Schema({
-  name: { type: String, required: true, max: 100 },
-  email: { type: String, required: true, max: 100 },
-  password: { type: String, required: true, max: 100 },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  // Embed the role schema inside the user schema
-  roles: [roleSchema],
-  // Add references to projects and tasks
-  projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
-  tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
-});
-
-// Export the model
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", UserSchema);

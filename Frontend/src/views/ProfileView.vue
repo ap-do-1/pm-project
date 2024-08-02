@@ -1,63 +1,65 @@
 <script setup>
-import { reactive } from "vue";
-import { useMainStore } from "@/stores/main";
-import {
-  mdiAccount,
-  mdiMail,
-  mdiAsterisk,
-  mdiFormTextboxPassword,
-  mdiGithub,
-} from "@mdi/js";
-import SectionMain from "@/components/SectionMain.vue";
-import CardBox from "@/components/CardBox.vue";
-import BaseDivider from "@/components/BaseDivider.vue";
-import FormField from "@/components/FormField.vue";
-import FormControl from "@/components/FormControl.vue";
-import FormFilePicker from "@/components/FormFilePicker.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import BaseButtons from "@/components/BaseButtons.vue";
-import UserCard from "@/components/UserCard.vue";
-import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
-import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
+import { useAuthStore } from '@/stores/auth'
+import { mdiAccount, mdiMail, mdiAsterisk, mdiFormTextboxPassword } from '@mdi/js'
+import SectionMain from '@/components/SectionMain.vue'
+import CardBox from '@/components/CardBox.vue'
+import BaseDivider from '@/components/BaseDivider.vue'
+import FormField from '@/components/FormField.vue'
+import FormControl from '@/components/FormControl.vue'
+import FormFilePicker from '@/components/FormFilePicker.vue'
+import BaseButton from '@/components/BaseButton.vue'
+import BaseButtons from '@/components/BaseButtons.vue'
+import UserCard from '@/components/UserCard.vue'
+import layout from '@/layouts/Layout.vue'
+import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
+import { reactive } from 'vue'
 
-const mainStore = useMainStore();
+const authStore = useAuthStore()
 
 const profileForm = reactive({
-  name: mainStore.user.name,
-  email: mainStore.user.email,
-});
+  name: authStore.userDetail.username,
+  email: authStore.userDetail.email,
+  avatar: authStore.userDetail.avatar
+})
 
 const passwordForm = reactive({
-  password_current: "",
-  password: "",
-  password_confirmation: "",
-});
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
 
+async function submitProfile() {
+  let formData = new FormData()
+  formData.append('username', profileForm.name)
+  formData.append('email', profileForm.email)
+  formData.append('avatar', profileForm.avatar)
 
-const submitProfile = () => {
-  mainStore.setUser(profileForm);
-  profileForm.name = mainStore.userName;
-  profileForm.email = mainStore.userEmail;
-};
-
+  await authStore.updateUser(formData)
+}
 
 const submitPass = () => {
-  mainStore.setUser(passwordForm);
-  passwordForm.password_current = "";
-  passwordForm.password = "";
-  passwordForm.password_confirmation = "";
-};
+  authStore.setUserPassword({
+    current_password: passwordForm.currentPassword,
+    password: passwordForm.newPassword,
+    password_confirmation: passwordForm.confirmPassword
+  })
+}
 </script>
 
 <template>
-  <LayoutAuthenticated>
+  <layout>
     <SectionMain>
+      <SectionTitleLineWithButton :icon="mdiAccount" title="Profile" main />
       <UserCard class="mb-6" />
-
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CardBox is-form @submit.prevent="submitProfile">
           <FormField label="Avatar" help="Max 500kb">
-            <FormFilePicker label="Upload" />
+            <FormFilePicker
+              v-model="profileForm.avatar"
+              label="Upload"
+              accept=".jpg,.jpeg,.png"
+              :max-size="500000"
+            />
           </FormField>
 
           <FormField label="Name" help="Required. Your name">
@@ -83,18 +85,14 @@ const submitPass = () => {
           <template #footer>
             <BaseButtons>
               <BaseButton color="info" type="submit" label="Submit" />
-              <BaseButton color="info" label="Options" outline />
             </BaseButtons>
           </template>
         </CardBox>
 
         <CardBox is-form @submit.prevent="submitPass">
-          <FormField
-            label="Current password"
-            help="Required. Your current password"
-          >
+          <FormField label="Current password" help="Required. Your current password">
             <FormControl
-              v-model="passwordForm.password_current"
+              v-model="passwordForm.currentPassword"
               :icon="mdiAsterisk"
               name="password_current"
               type="password"
@@ -107,37 +105,32 @@ const submitPass = () => {
 
           <FormField label="New password" help="Required. New password">
             <FormControl
-              v-model="passwordForm.password"
+              v-model="passwordForm.newPassword"
               :icon="mdiFormTextboxPassword"
-              name="password"
+              name="new_password"
               type="password"
               required
               autocomplete="new-password"
             />
           </FormField>
 
-          <FormField
-            label="Confirm password"
-            help="Required. New password one more time"
-          >
+          <FormField label="Confirm password" help="Required. New password one more time">
             <FormControl
-              v-model="passwordForm.password_confirmation"
+              v-model="passwordForm.confirmPassword"
               :icon="mdiFormTextboxPassword"
-              name="password_confirmation"
+              name="confirm_password"
               type="password"
               required
               autocomplete="new-password"
             />
           </FormField>
-
           <template #footer>
             <BaseButtons>
-              <BaseButton type="submit" color="info" label="Submit" />
-              <BaseButton color="info" label="Options" outline />
+              <BaseButton color="info" type="submit" label="Submit" />
             </BaseButtons>
           </template>
         </CardBox>
       </div>
     </SectionMain>
-  </LayoutAuthenticated>
+  </layout>
 </template>

@@ -1,18 +1,22 @@
 <script setup>
-import { computed } from "vue";
-import { useMainStore } from "@/stores/main";
+import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
-const mainStore = useMainStore();
+defineProps({
+  username: {
+    type: String,
+    required: true
+  },
+  avatar: {
+    type: String,
+    default: null
+  }
+})
 
-const avatar = computed(
-  () =>
-    mainStore.user.avatar ??
-    `https://avatars.dicebear.com/api/${
-      mainStore.user.api
-    }/${mainStore.user.username.replace(/[^a-z0-9]+/i, "-")}.svg`
-);
+const authStore = useAuthStore()
 
-const username = computed(() => mainStore.user.name);
+const username = computed(() => authStore.userDetail.username)
+const avatar = computed(() => authStore.userDetail.avatar)
 </script>
 
 <template>

@@ -1,18 +1,26 @@
 <script setup>
-import { computed, ref } from "vue";
-import { useMainStore } from "@/stores/main";
-import { mdiCheckDecagram } from "@mdi/js";
-import BaseLevel from "@/components/BaseLevel.vue";
-import UserAvatarCurrentUser from "@/components/UserAvatarCurrentUser.vue";
-import CardBox from "@/components/CardBox.vue";
-import FormCheckRadio from "@/components/FormCheckRadio.vue";
-import PillTag from "@/components/PillTag.vue";
+import { computed, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { mdiCheckDecagram } from '@mdi/js'
+import BaseLevel from '@/components/BaseLevel.vue'
+import UserAvatarCurrentUser from '@/components/UserAvatarCurrentUser.vue'
+import CardBox from '@/components/CardBox.vue'
+import FormCheckRadio from '@/components/FormCheckRadio.vue'
+import PillTag from '@/components/PillTag.vue'
 
-const mainStore = useMainStore();
+const authStore = useAuthStore()
 
-const userName = computed(() => mainStore.userName);
+const userName = computed(() => authStore.userDetail.username)
 
-const userSwitchVal = ref(false);
+const lastLogin = computed(() => {
+  const lastLoginTime = authStore.userDetail.lastLogin
+  if (lastLoginTime) {
+    const date = new Date(lastLoginTime)
+    return `Last login ${date.toLocaleString()}`
+  }
+  return ''
+})
+
 </script>
 
 <template>
@@ -24,7 +32,7 @@ const userSwitchVal = ref(false);
           Hello, <b>{{ userName }}</b
           >!
         </h1>
-        <p>Last login <b>12 mins ago</b> from <b>127.0.0.1</b></p>
+        <p><p>{{ lastLogin }}</p> from <b>{{ userName }}</b></p>
       </div>
     </BaseLevel>
   </CardBox>

@@ -1,84 +1,77 @@
 <script setup>
-import { mdiUpload } from "@mdi/js";
-import { computed, ref, watch } from "vue";
-import BaseButton from "@/components/BaseButton.vue";
+import { mdiUpload } from '@mdi/js'
+import { computed, ref, watch } from 'vue'
+import BaseButton from '@/components/BaseButton.vue'
 
 const props = defineProps({
   modelValue: {
-    type: [Object, File, Array],
-    default: null,
+    type: [Object, File, Array, String],
+    default: null
   },
   label: {
     type: String,
-    default: null,
+    default: null
   },
   icon: {
     type: String,
-    default: mdiUpload,
+    default: mdiUpload
   },
   accept: {
     type: String,
-    default: null,
+    default: null
   },
   color: {
     type: String,
-    default: "info",
+    default: 'info'
   },
-  isRoundIcon: Boolean,
-});
+  isRoundIcon: Boolean
+})
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue'])
 
-const root = ref(null);
+const root = ref(null)
 
-const file = ref(props.modelValue);
+const file = ref(props.modelValue)
 
-const showFilename = computed(() => !props.isRoundIcon && file.value);
+const showFilename = computed(() => !props.isRoundIcon && file.value)
 
-const modelValueProp = computed(() => props.modelValue);
+const modelValueProp = computed(() => props.modelValue)
 
 watch(modelValueProp, (value) => {
-  file.value = value;
+  file.value = value
 
   if (!value) {
-    root.value.input.value = null;
+    root.value.input.value = null
   }
-});
+})
 
-const upload = (event) => {
-  const value = event.target.files || event.dataTransfer.files;
+// const upload = (event) => {
+//   const value = event.target.files || event.dataTransfer.files
 
-  file.value = value[0];
+//   file.value = value[0]
 
-  emit("update:modelValue", file.value);
+//   emit('update:modelValue', file.value)
 
-  // Use this as an example for handling file uploads
-  // let formData = new FormData()
-  // formData.append('file', file.value)
+//   let formData = new FormData()
+//   formData.append('file', file.value)
 
-  // const mediaStoreRoute = `/your-route/`
+//   const mediaStoreRoute = `/your-route/`
 
-  // axios
-  //   .post(mediaStoreRoute, formData, {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data'
-  //     },
-  //     onUploadProgress: progressEvent
-  //   })
-  //   .then(r => {
-  //
-  //   })
-  //   .catch(err => {
-  //
-  //   })
-};
+//   axios
+//     .post(mediaStoreRoute, formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data'
+//       },
+//       onUploadProgress: progressEvent
+//     })
+//     .then((r) => {})
+//     .catch((err) => {})
+// }
 
 // const uploadPercent = ref(0)
-//
-// const progressEvent = progressEvent => {
-//   uploadPercent.value = Math.round(
-//     (progressEvent.loaded * 100) / progressEvent.total
-//   )
+
+// const progressEvent = (progressEvent) => {
+//   uploadPercent.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
 // }
 </script>
 
@@ -107,8 +100,14 @@ const upload = (event) => {
       class="px-4 py-2 bg-gray-100 dark:bg-slate-800 border-gray-200 dark:border-slate-700 border rounded-r"
     >
       <span class="text-ellipsis line-clamp-1">
-        {{ file.name }}
+        {{ typeof file === 'string' ? file : file.name }}
       </span>
     </div>
+    <img
+      v-if="typeof modelValue === 'string'"
+      :src="modelValue"
+      alt="avatar"
+      class="h-10 w-10 object-cover rounded-full"
+    />
   </div>
 </template>

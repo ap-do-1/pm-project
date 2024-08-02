@@ -2,8 +2,8 @@
 import { computed } from "vue";
 import { useStyleStore } from "@/stores/style";
 import {
-  gradientBgPurplePink,
   gradientBgDark,
+  gradientBgPurplePink,
   gradientBgPinkRed,
 } from "@/colors";
 
@@ -11,7 +11,7 @@ const props = defineProps({
   bg: {
     type: String,
     required: true,
-    validator: (value) => ["purplePink", "pinkRed"].includes(value),
+    validator: (value) => ["darkBg", "purplePink", "pinkRed"].includes(value),
   },
 });
 
@@ -21,6 +21,8 @@ const colorClass = computed(() => {
   }
 
   switch (props.bg) {
+    case "darkBg":
+      return gradientBgDark;
     case "purplePink":
       return gradientBgPurplePink;
     case "pinkRed":
